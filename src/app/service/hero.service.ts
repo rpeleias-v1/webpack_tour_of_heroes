@@ -45,12 +45,19 @@ export class HeroService {
             .then(heroes => heroes.find(hero => hero.id === id));
     }
 
-    create(name: string): Promise<Hero> {
-        const url = '${this.heroesUrl}/${hero.id}';
+    create(name: string): Promise<Hero> {        
         return this.http
-            .put(url, JSON.stringify({name: name}), { headers: this.headers })
+            .post(this.heroesUrl, JSON.stringify({name: name}), { headers: this.headers })
             .toPromise()
             .then(response => response.json().data)
+            .catch(this.handleError);
+    }
+
+    delete(id: number): Promise<void> {
+        const url = `${this.heroesUrl}/${id}`;
+        return this.http.delete(url, {headers: this.headers})
+            .toPromise()
+            .then(() => null)
             .catch(this.handleError);
     }
 }
